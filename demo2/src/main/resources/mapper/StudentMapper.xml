@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- UserDao的映射文件，UserDao的实现-->
+<mapper namespace="com.newer.dao.StudentMapper">
+
+    <resultMap id="stuList1" type="Student">
+        <id property="stuId" column="STUID"/>
+        <!--column时查询处理对应列的别名-->
+        <result property="stuName" column="STUNAME"/>
+        <result property="stuSex" column="STUSEX"/>
+        <result property="stuJointime" column="STUNJOINTIME"/>
+        <association property="stuClass" javaType="ClassInfo" resultMap="com.newer.dao.ClassInfoMapper.classList1">
+
+        </association>
+    </resultMap>
+
+    <select id="findAll" resultMap="stuList1">
+        SELECT stuid,stuname,stusex,stujointime,classid,classname,classgrade from stuinfo s left join classinfo c2 ON s.sclassid = c2.classid
+    </select>
+
+    <resultMap id="stuList2" type="Student">
+        <id property="stuId" column="STUID"/>
+        <!--column时查询处理对应列的别名-->
+        <result property="stuName" column="STUNAME"/>
+        <result property="stuSex" column="STUSEX"/>
+        <result property="stuJointime" column="STUNJOINTIME"/>
+        <association property="stuClass" javaType="ClassInfo" fetchType="lazy"
+                     column="SCLASSID" select="com.newer.dao.ClassInfoMapper.findById" />
+    </resultMap>
+    <select id="findAll2" resultMap="stuList2">
+        SELECT stuid,stuname,stujointime,sclassid from stuinfo
+    </select>
+
+</mapper>

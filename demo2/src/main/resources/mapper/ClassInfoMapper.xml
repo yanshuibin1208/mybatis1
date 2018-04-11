@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- UserDao的映射文件，UserDao的实现-->
+<mapper namespace="com.newer.dao.ClassInfoMapper">
+
+    <resultMap id="classList1" type="ClassInfo">
+        <id property="classId" column="CLASSID"/>
+        <result property="className" column="CLASSNAME"/>
+        <result property="classGrade" column="CLASSGRADE"/>
+    </resultMap>
+    <select id="findById" resultMap="classList1">
+        select * from classinfo WHERE classid=#{classId}
+    </select>
+
+</mapper>

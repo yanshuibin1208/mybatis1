@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--主配置文件-->
+<configuration>
+    <!--配置类型别名-->
+    <typeAliases>
+        <typeAlias type="com.newer.pojo.Student" alias="Student" />
+        <typeAlias type="com.newer.pojo.ClassInfo" alias="ClassInfo"/>
+
+    </typeAliases>
+
+    <!--配置连接方式-->
+<environments default="env1">
+    <environment id="env1">
+        <transactionManager type="JDBC"></transactionManager>
+        <dataSource type="POOLED">
+            <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="url" value="jdbc:mysql://127.0.0.1:3306/employee?serverTimezone=UTC"/>
+            <property name="username" value="root"/>
+            <property name="password" value="root"/>
+        </dataSource>
+    </environment>
+</environments>
+
+    <!--指定映射文件标签-->
+    <mappers>
+        <mapper resource="mapper/StudentMapper.xml"/>
+        <mapper resource="mapper/ClassInfoMapper.xml"/>
+
+    </mappers>
+</configuration>
