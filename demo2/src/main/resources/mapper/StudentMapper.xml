@@ -16,8 +16,12 @@
         </association>
     </resultMap>
 
+    <sql id="sql1">
+      SELECT stuid,stuname,stusex,stujointime,classid,classname,classgrade from stuinfo s left join classinfo c2 ON s.sclassid = c2.classid
+    </sql>
+
     <select id="findAll" resultMap="stuList1">
-        SELECT stuid,stuname,stusex,stujointime,classid,classname,classgrade from stuinfo s left join classinfo c2 ON s.sclassid = c2.classid
+        <include refid="sql1"/>
     </select>
 
     <resultMap id="stuList2" type="Student">
@@ -31,6 +35,50 @@
     </resultMap>
     <select id="findAll2" resultMap="stuList2">
         SELECT stuid,stuname,stujointime,sclassid from stuinfo
+    </select>
+
+    <resultMap id="stuList3" type="Student">
+    <id property="stuId" column="STUID"/>
+    <!--column时查询处理对应列的别名-->
+    <result property="stuName" column="STUNAME"/>
+    <result property="stuSex" column="STUSEX"/>
+    </resultMap>
+    <select id="findByClassId" resultMap="stuList3">
+        select stuid,stuname,stusex from stuinfo where sclassid=#{classId}
+    </select>
+
+    <update id="updateStudent" parameterType="Student">
+        UPDATE  stuinfo <set>
+        <if test="stuName!=null and stuName!=''">
+            stuname=#{stuName},
+        </if>
+        <if test="stuSex!=null and stuSex!=''">
+            stusex=#{stuSex},
+        </if>
+        <if test="stuClass!=null and stuClass.classId!=null">
+            sclassid=#{stuClass.classId}
+        </if>
+    </set>
+         where stuid=#{stuId}
+    </update>
+
+    <select id="findAdv" resultMap="stuList1">
+        <include refid="sql1"/>
+        <where>
+            <if test="stuName!=null and stuName!=''">
+                stuname like #{stuName}
+            </if>
+            <if test="stuSex!=null and stuSex!=''">
+                 AND stusex=#{stuSex}
+            </if>
+            <if test="beginTime!=null and endTime!=null">
+                AND stujoinTime BETWEEN #{beginTime} AND #{endTime}
+            </if>
+            <if test="stuClass!=null and stuClass.classId!=null">
+                AND sclassid=#{stuClass.classId}
+            </if>
+            
+        </where>
     </select>
 
 </mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- UserDao的映射文件，UserDao的实现-->
+<mapper namespace="com.newer.dao.CourseMapper">
+    <resultMap id="courseList1" type="Course">
+        <id property="courseId" column="COURSEID"/>
+        <result property="courseName" column="COURSENAME"/>
+        <collection property="students" ofType="Student">
+            <id property="stuId" column="STUID"/>
+            <result property="stuName" column="STUNAME"/>
+            <association property="stuClass" javaType="ClassInfo">
+                <id property="classId" column="CLASSID"/>
+                <result property="className" column="CLASSNAME"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="findAll" resultMap="courseList1">
+        SELECT courseid,courseName,stuId,stuname,classid,classname
+        from course c1 LEFT JOIN sc ON c1.courseId=sc.cid
+        LEFT JOIN stuinfo s ON sc.sid = s.stuid
+        LEFT JOIN classinfo c2 ON s.sclassid = c2.classid
+    </select>
+
+
+
+
+
+</mapper>

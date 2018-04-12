@@ -1,9 +1,20 @@
 package com.newer.pojo;
 
+import java.util.List;
+
 public class ClassInfo {
     private Integer classId;
     private String className;
     private String classGrade;
+    private List<Student> students;
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
 
     public Integer getClassId() {
         return classId;

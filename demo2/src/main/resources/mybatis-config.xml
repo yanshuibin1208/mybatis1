@@ -7,6 +7,7 @@
     <typeAliases>
         <typeAlias type="com.newer.pojo.Student" alias="Student" />
         <typeAlias type="com.newer.pojo.ClassInfo" alias="ClassInfo"/>
+        <typeAlias type="com.newer.pojo.Course" alias="Course"/>
 
     </typeAliases>
 
@@ -27,6 +28,7 @@
     <mappers>
         <mapper resource="mapper/StudentMapper.xml"/>
         <mapper resource="mapper/ClassInfoMapper.xml"/>
+        <mapper resource="mapper/CourseMapper.xml"/>
 
     </mappers>
 </configuration>

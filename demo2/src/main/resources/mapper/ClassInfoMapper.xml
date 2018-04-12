@@ -14,4 +14,34 @@
         select * from classinfo WHERE classid=#{classId}
     </select>
 
+    <resultMap id="classList2" type="ClassInfo">
+        <id property="classId" column="CLASSID"/>
+        <result property="className" column="CLASSNAME"/>
+        <result property="classGrade" column="CLASSGRADE"/>
+        <!--oftype 是不是集合元素的类型-->
+        <collection property="students" ofType="Student">
+            <id property="stuId" column="STUID"/>
+            <result property="stuName" column="STUNAME"/>
+        </collection>
+    </resultMap>
+
+    <select id="findAll" resultMap="classList2">
+        select classId,className,classGrade,stuid,stuname from classinfo c LEFT JOIN stuinfo s ON c.classid = s.sclassid
+    </select>
+
+
+    <resultMap id="classList3" type="ClassInfo">
+        <id property="classId" column="CLASSID"/>
+        <result property="className" column="CLASSNAME"/>
+        <result property="classGrade" column="CLASSGRADE"/>
+        <!--oftype 是不是集合元素的类型-->
+        <collection property="students" ofType="Student"
+        column="CLASSID" select="com.newer.dao.StudentMapper.findByClassId"/>
+
+    </resultMap>
+
+    <select id="findAll2" resultMap="classList3">
+        select * from classinfo
+    </select>
+
 </mapper>
