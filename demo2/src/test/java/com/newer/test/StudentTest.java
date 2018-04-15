@@ -10,6 +10,8 @@ import com.newer.util.SqlSessionUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +28,8 @@ public class StudentTest {
         students.forEach((Student student)->{
             System.out.println(student.getStuName()+":"+student.getStuClass().getClassName());
         });
-        sqlSession.close();
+
+        SqlSessionUtil.closeSqlSession(sqlSession);
     }
 
     @Test
@@ -38,7 +41,7 @@ public class StudentTest {
         students.forEach((Student student)->{
             System.out.println(student.getStuName()+":"+student.getStuClass().getClassName());
         });
-        sqlSession.close();
+        SqlSessionUtil.closeSqlSession(sqlSession);
     }
 
     @Test
@@ -51,7 +54,7 @@ public class StudentTest {
             System.out.println(classInfo.getClassName());
             System.out.println(classInfo.getStudents().size());
         }
-        sqlSession.close();
+        SqlSessionUtil.closeSqlSession(sqlSession);
     }
     @Test
     public void findAll4(){
@@ -63,7 +66,7 @@ public class StudentTest {
             System.out.println(classInfo.getClassName());
             System.out.println(classInfo.getStudents().size());
         }
-        sqlSession.close();
+        SqlSessionUtil.closeSqlSession(sqlSession);
     }
 
     @Test
@@ -79,7 +82,7 @@ public class StudentTest {
                }
            }
         }
-        sqlSession.close();
+        SqlSessionUtil.closeSqlSession(sqlSession);
     }
 
     @Test
@@ -90,16 +93,16 @@ public class StudentTest {
        classInfo.setClassId(2);
        Student student=new Student();
        student.setStuId(1);
-       student.setStuName("Jack");
-       student.setStuSex("男");
+       //student.setStuName("Jack");
+       student.setStuSex("女");
        student.setStuClass(classInfo);
         System.out.println(dao.updateStudent(student));
         sqlSession.commit();
-        sqlSession.close();
+        SqlSessionUtil.closeSqlSession(sqlSession);
     }
 
     @Test
-    public void findAll7(){
+    public void findAdv(){
         SqlSession sqlSession= SqlSessionUtil.getSqlSession();
         StudentMapper dao=sqlSession.getMapper(StudentMapper.class);
         ClassInfo classInfo=new ClassInfo();
@@ -114,6 +117,47 @@ public class StudentTest {
         list.forEach((Student student)->{
             System.out.println(student.getStuName()+":"+student.getStuClass().getClassName());
         });
-        sqlSession.close();
+        SqlSessionUtil.closeSqlSession(sqlSession);
+    }
+
+    @Test
+    public void findAdv2(){
+        SqlSession sqlSession= SqlSessionUtil.getSqlSession();
+        StudentMapper dao=sqlSession.getMapper(StudentMapper.class);
+        int[]stuIds=new int[]{1,3};
+        List<Student> list=dao.findAdv2(stuIds);
+        for (Student student:list){
+            System.out.println(student.getStuName());
+        }
+        SqlSessionUtil.closeSqlSession(sqlSession);
+    }
+
+    @Test
+    public void findAdv3(){
+        SqlSession sqlSession= SqlSessionUtil.getSqlSession();
+        StudentMapper dao=sqlSession.getMapper(StudentMapper.class);
+        List<String>list=new ArrayList<String>();
+        list.add("S001");
+        list.add("S002");
+        list.add("S003");
+        System.out.println(dao.addCourses(4,list));
+        sqlSession.commit();
+        SqlSessionUtil.closeSqlSession(sqlSession);
+    }
+
+    @Test
+    public void findAll8(){
+        SqlSession sqlSession=SqlSessionUtil.getSqlSession();
+        StudentMapper dao=sqlSession.getMapper(StudentMapper.class);
+        Map<String,Object>map=new HashMap<String,Object>();
+        map.put("order","stujointime");
+        map.put("sort","DESC");
+        map.put("pageNo",1);
+        map.put("pageSize",2);
+        List<Student>list=dao.findAll3(map);
+        for (Student student:list){
+            System.out.println(student.getStuName()+":"+student.getStuId());
+        }
+        SqlSessionUtil.closeSqlSession(sqlSession);
     }
 }

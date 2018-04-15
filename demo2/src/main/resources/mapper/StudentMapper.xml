@@ -48,7 +48,9 @@
     </select>
 
     <update id="updateStudent" parameterType="Student">
-        UPDATE  stuinfo <set>
+        UPDATE  stuinfo
+        <!--<set>-->
+        <trim prefix="SET" suffixOverrides=",">
         <if test="stuName!=null and stuName!=''">
             stuname=#{stuName},
         </if>
@@ -58,7 +60,8 @@
         <if test="stuClass!=null and stuClass.classId!=null">
             sclassid=#{stuClass.classId}
         </if>
-    </set>
+        </trim>
+    <!--</set>-->
          where stuid=#{stuId}
     </update>
 
@@ -79,6 +82,77 @@
             </if>
             
         </where>
+    </select>
+
+
+    <select id="findAdv2" resultMap="stuList1">
+        <include refid="sql1"/>
+        WHERE stuid IN
+        <foreach collection="array" item="stuId" open="(" close=")" separator=",">
+            #{stuId}
+        </foreach>
+    </select>
+
+<insert id="addCourses">
+    INSERT  INTO sc (sid, cid)
+    SELECT #{stuId},a.*  FROM (
+    <foreach collection="courseIds" item="courseId" separator="UNION">
+       SELECT #{courseId}
+</foreach>
+    ) a
+</insert>
+
+    <sql id="whereSql">
+        <where>
+            <if test="stuName!=null and stuName!=''">
+                stuname like #{stuName}
+            </if>
+            <if test="stuSex!=null and stuSex!=''">
+                AND stusex=#{stuSex}
+            </if>
+            <if test="beginTime!=null and endTime!=null">
+                AND stujointime BETWEEN #{beginTime} AND #{endTime}
+            </if>
+            <if test="stuClass!=null and stuClass.classId!=null">
+                AND sclassid=#{stuClass.classId}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="orderSql">
+
+        ORDER  BY
+        <choose>
+            <when test="order=='stujointime'">
+                STUJOINTIME
+            </when>
+            <when test="order=='stusex'">
+                STUSEX
+            </when>
+            <when test="order=='classid'">
+                SCLASSID
+            </when>
+            <otherwise>STUID</otherwise>
+        </choose>
+
+        <if test="sort=='DESC'">
+            DESC
+        </if>
+        <if test="sort==null or sort=='ASC'">
+            ASC
+        </if>
+    </sql>
+
+    <sql id="pageSql">
+        <bind name="firstLine" value="(pageNo-1)*pageSize"/>
+        limit #{firstLine},#{pageSize}
+    </sql>
+
+    <select id="findAll3" resultMap="stuList1">
+        <include refid="sql1"/>
+        <include refid="whereSql"/>
+        <include refid="orderSql"/>
+        <include refid="pageSql"/>
     </select>
 
 </mapper>
